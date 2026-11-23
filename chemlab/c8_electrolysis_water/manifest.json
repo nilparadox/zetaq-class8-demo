@@ -1,0 +1,25 @@
+{
+ "device": "c8_electrolysis_water",
+ "title": "Passing Electricity Through Water",
+ "built": "2026-11-23 17:39:21",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.fcf33ce712.js": {
+   "bytes": 525113,
+   "sha256": "fcf33ce712cf399f5b265f1cc35cf666cfab320a3537e1869201e2d2b68a9ed2"
+  },
+  "index.html": {
+   "bytes": 7438,
+   "sha256": "804754a2e7d0ef2f7028d253f0cc42d4ab41cc56befe333d94b72b9505dcacbc"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}

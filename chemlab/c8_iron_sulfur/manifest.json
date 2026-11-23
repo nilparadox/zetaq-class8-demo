@@ -1,0 +1,25 @@
+{
+ "device": "c8_iron_sulfur",
+ "title": "Iron and Sulfur: Mixture or Compound?",
+ "built": "2026-11-23 17:39:26",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.227b77313f.js": {
+   "bytes": 561150,
+   "sha256": "227b77313fb574d477c00015eebbd8cae57d18d1d199345e93196b303c29e084"
+  },
+  "index.html": {
+   "bytes": 7442,
+   "sha256": "d2264872ffc82ec2d5a7074c3d007876ce64e230829ae81801cd1aee401f419c"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}

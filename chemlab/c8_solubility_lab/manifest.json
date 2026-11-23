@@ -1,0 +1,25 @@
+{
+ "device": "c8_solubility_lab",
+ "title": "Solutes, Solvents and Solutions",
+ "built": "2026-11-23 17:39:30",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.44fca27ab1.js": {
+   "bytes": 505302,
+   "sha256": "44fca27ab14f3aefa1398eb0d6c6e204df0742146d9485efdecdb584746ae541"
+  },
+  "index.html": {
+   "bytes": 7436,
+   "sha256": "c502c3a28651bf052212f47cf72cb1e9cb5efccd004e03d9308f47e3b6e42606"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}

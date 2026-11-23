@@ -1,0 +1,25 @@
+{
+ "device": "c8_lemon_cell",
+ "title": "Lemon Cell",
+ "built": "2026-11-23 17:39:33",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.dc37928e74.js": {
+   "bytes": 512315,
+   "sha256": "dc37928e745a9e20d8b33d82af1e9993a5f7d7bcd9fea66fa37d919805de374a"
+  },
+  "index.html": {
+   "bytes": 7415,
+   "sha256": "607e66ba4e8b70de8cf567293ba85dc14a1b18ed97e05693af8e5490cef22717"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}
