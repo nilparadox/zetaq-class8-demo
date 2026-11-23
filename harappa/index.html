@@ -1,0 +1,249 @@
+<meta charset="utf-8">
+<title>Harappa Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314100c'/%3E%3Cpath d='M5 24h22M7 24V13h5v11M14 24V9h5v15M21 24v-8h4v8' fill='none' stroke='%23e2753f' stroke-width='2.500'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap">
+<style>
+/* One full-screen view of the city. The big button bottom right is always the next thing to do. */
+:root{
+  color-scheme: dark;
+  --void:#14100c; --panel:rgba(30,22,15,.84); --panel-solid:#1e1610; --line:rgba(240,214,170,.22); --line-strong:rgba(240,214,170,.46);
+  --ink:#f8efdf; --dim:#c9b594; --amber:#ffb648; --amber-ink:#2a1802; --teal:#62d0c6; --green:#9be08a;
+  --display:'Nunito','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --gl:max(14px, env(safe-area-inset-left, 0px)); --gr:max(14px, env(safe-area-inset-right, 0px));
+  --gt:max(12px, env(safe-area-inset-top, 0px)); --gb:max(14px, env(safe-area-inset-bottom, 0px));
+}
+html,body{height:100%;margin:0;background:var(--void);color:var(--ink);font-family:var(--display);font-size:15px;font-weight:500;overflow:hidden;overscroll-behavior:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;touch-action:manipulation}
+#app{position:fixed;inset:0;overflow:hidden;background:var(--void);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none}
+#gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block;outline:none;touch-action:none}
+.layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);pointer-events:auto}
+.eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:800}
+svg.ic{width:1.35em;height:1.35em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+#loc{position:absolute;top:var(--gt);left:var(--gl);padding:9px 14px 10px;max-width:min(330px,calc(100% - 190px))}
+#st-prog{font-size:12.5px;color:var(--dim);margin-bottom:3px}
+#st-prog b{color:var(--amber);font-weight:800}
+#st-body{font-size:22px;font-weight:900;line-height:1.1}
+#st-sub{color:var(--dim);font-size:13.5px;margin-top:2px;font-weight:700}
+
+#topbtns{position:absolute;top:var(--gt);right:var(--gr);display:flex;gap:8px}
+.tb{pointer-events:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:66px;height:56px;padding:4px 8px;border-radius:16px;background:var(--panel);border:1px solid var(--line-strong);font-size:12px;font-weight:800;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.tb svg{width:24px;height:24px}
+.tb:hover{border-color:var(--teal);color:var(--teal)}
+.tb:focus-visible,.act:focus-visible,.btn:focus-visible,.pl:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+#actions{position:absolute;right:var(--gr);bottom:var(--gb);display:flex;flex-direction:column;align-items:flex-end;gap:9px;max-width:calc(100% - 28px)}
+#actions .rowa{display:flex;gap:9px;flex-wrap:wrap-reverse;justify-content:flex-end;align-items:flex-end}
+.act{pointer-events:auto;display:inline-flex;align-items:center;gap:9px;height:54px;padding:0 20px 0 16px;border-radius:999px;background:rgba(30,22,15,.88);border:2px solid var(--line-strong);font-size:17px;font-weight:800;cursor:pointer;white-space:nowrap;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .08s}
+.act:active{transform:scale(.95)}
+.act:hover{border-color:var(--teal)}
+.act kbd{font-family:var(--display);font-size:11.5px;font-weight:800;opacity:.7;border:1.500px solid currentColor;border-radius:6px;padding:0 5px;line-height:1.5}
+.act.primary{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);height:64px;font-size:20px;padding:0 28px 0 22px;animation:pulse 2.4s infinite}
+.act.primary:hover{background:#ffc66e}
+.act.round{width:84px;height:84px;padding:0;justify-content:center;flex-direction:column;gap:0;font-size:14px;border-radius:50%;touch-action:none}
+.act.round svg{width:30px;height:30px}
+.act.round.held{background:var(--teal);color:#06302c;border-color:var(--teal)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,182,72,.45)}70%{box-shadow:0 0 0 14px rgba(255,182,72,0)}100%{box-shadow:0 0 0 0 rgba(255,182,72,0)}}
+
+#stick{position:absolute;left:calc(var(--gl) + 6px);bottom:calc(var(--gb) + 6px);width:136px;height:136px;border-radius:50%;border:2px solid var(--line-strong);background:rgba(30,22,15,.4);pointer-events:auto;touch-action:none;display:none}
+.touch #stick{display:block}
+#stick i{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px;border-radius:50%;background:rgba(248,239,223,.32);border:2px solid var(--ink);pointer-events:none}
+#stick span{position:absolute;left:0;right:0;top:-22px;text-align:center;font-size:12px;font-weight:800;color:var(--ink);text-shadow:0 1px 3px #000}
+.touch #actions{max-width:calc(100% - 176px)}
+.touch #actions .rowa{flex-direction:column;align-items:flex-end;flex-wrap:nowrap}
+@media (min-width:700px){.touch #actions .rowa{flex-direction:row;flex-wrap:wrap-reverse}}
+
+#mini{position:absolute;top:calc(var(--gt) + 66px);right:var(--gr);width:156px;height:156px;border-radius:50%;pointer-events:auto;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+#bigmap{display:block;width:100%;border-radius:12px;border:1px solid var(--line-strong);cursor:pointer;touch-action:manipulation}
+#guide{position:absolute;top:var(--gt);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:15px;font-weight:800;cursor:pointer;border-color:var(--amber);max-width:min(440px,calc(100% - 560px))}
+#guide span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#guide svg{color:var(--amber)}#guide b{color:var(--dim);margin-left:4px}
+#toast{position:absolute;left:50%;bottom:calc(var(--gb) + 96px);transform:translateX(-50%);width:max-content;max-width:min(560px,calc(100% - 28px));padding:11px 18px;font-size:16px;font-weight:700;line-height:1.35;text-align:center;border-color:var(--line-strong)}
+#year{position:absolute;left:0;right:0;top:24%;text-align:center;pointer-events:none}
+#year small{display:block;font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);text-shadow:0 2px 10px #000}
+#year-n{font-size:clamp(54px,13vw,120px);font-weight:900;color:var(--amber);text-shadow:0 4px 30px rgba(0,0,0,.85);line-height:1.05}
+#card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,calc(100% - 28px));max-height:calc(100% - 180px);overflow-y:auto;padding:16px 18px;border-color:var(--amber);background:rgba(30,22,15,.95);z-index:8;touch-action:pan-y}
+#card h3{margin:4px 0 8px;font-size:25px;font-weight:900;line-height:1.1}
+#card p{margin:0 0 10px;font-size:16.5px;line-height:1.5}
+.note{font-size:13.5px;color:var(--dim);line-height:1.45}
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{background:rgba(240,214,170,.1);border:1.500px solid var(--line-strong);border-radius:999px;padding:10px 18px;font-size:15px;font-weight:800;cursor:pointer;pointer-events:auto;white-space:nowrap;line-height:1.2;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:rgba(240,214,170,.2)}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.btn.big{font-size:19px;padding:14px 28px}
+.btn[disabled]{opacity:.5;cursor:default}
+
+.mk{position:absolute;left:0;top:0;white-space:nowrap;will-change:transform}
+.mk::before{content:"";position:absolute;left:-9px;top:-9px;width:14px;height:14px;border:3px solid var(--amber);background:rgba(30,22,15,.55);transform:rotate(45deg);animation:blink 1.4s infinite}
+.mk span{position:absolute;left:14px;top:-12px;font-size:14px;font-weight:800;color:var(--ink);text-shadow:0 1px 4px #000,0 0 8px #000}
+.mk.done::before{border-color:var(--green);animation:none}
+.mk.near::before{width:20px;height:20px;left:-12px;top:-12px}
+@keyframes blink{50%{opacity:.4}}
+
+#menu{position:absolute;top:calc(var(--gt) + 64px);right:var(--gr);width:260px;padding:8px;display:flex;flex-direction:column;gap:4px;z-index:12;background:rgba(30,22,15,.97)}
+#menu button{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border:0;border-radius:10px;background:none;font-size:15.5px;font-weight:800;text-align:left;cursor:pointer}
+#menu button:hover{background:rgba(240,214,170,.14)}
+
+.overlay{position:absolute;inset:0;background:rgba(14,10,6,.86);display:flex;pointer-events:auto;z-index:20}
+.sheet{margin:auto;width:min(680px,calc(100% - 24px));max-height:calc(100% - 24px);display:flex;flex-direction:column;background:var(--panel-solid);border:1px solid var(--line-strong);border-radius:20px;overflow:hidden}
+.phead{display:flex;align-items:flex-start;gap:10px;padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+.phead h2{margin:2px 0 0;font-size:25px;font-weight:900;line-height:1.1}
+.phead .btn{margin-left:auto}
+.pbody{overflow-y:auto;padding:14px 18px 18px;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain}
+.pbody p{margin:0 0 10px;line-height:1.5}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px}
+.pl{display:flex;flex-direction:column;gap:2px;text-align:left;border:1.500px solid var(--line);border-radius:14px;background:rgba(240,214,170,.06);padding:12px 14px;cursor:pointer}
+.pl:hover{border-color:var(--amber)}
+.pl b{font-size:16.5px;font-weight:800}
+.pl span{font-size:13px;color:var(--dim)}
+.xp{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:800;margin-bottom:10px}
+.xp i{flex:1;height:12px;border-radius:6px;background:rgba(240,214,170,.15);overflow:hidden}
+.xp i u{display:block;height:100%;background:var(--amber);border-radius:6px}
+.dl{display:grid;gap:8px}
+.d{border:1px solid var(--line);border-radius:14px;padding:11px 14px;opacity:.6}
+.d.got{opacity:1}
+.d h4{margin:0 0 6px;font-size:17px;font-weight:900}
+.d p{margin:0 0 6px;font-size:14.5px;line-height:1.45;color:#e9dcc6}
+.d em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1.500px solid var(--line-strong);border-radius:6px;padding:1px 6px;margin-right:7px;color:var(--dim)}
+.d em.on{border-color:var(--teal);color:var(--teal)}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 26px;margin-bottom:12px}
+.keys div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+.keys div b{font-weight:800;color:var(--amber);white-space:nowrap}
+
+#start{background:linear-gradient(90deg,rgba(14,10,6,.95) 0%,rgba(14,10,6,.8) 46%,rgba(14,10,6,.12) 100%);align-items:center}
+#start .inner{padding:24px var(--gr) 24px max(28px,var(--gl));max-width:600px;max-height:100%;overflow-y:auto;touch-action:pan-y}
+#start h1{font-size:clamp(40px,8.500vw,72px);line-height:.95;margin:8px 0 14px;font-weight:900;letter-spacing:-.01em}
+#start h1 span{color:var(--amber);display:block}
+#start p{font-size:18px;line-height:1.5;margin:0 0 16px;max-width:38ch}
+#start ol{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:9px}
+#start li{display:flex;gap:12px;align-items:center;font-size:16.5px;line-height:1.35;font-weight:700}
+#start li svg{width:30px;height:30px;color:var(--teal);flex:none}
+#start small{display:block;margin-top:14px;color:var(--dim);font-size:13.5px;line-height:1.5;max-width:52ch}
+#load{height:6px;border-radius:3px;background:rgba(240,214,170,.15);overflow:hidden;margin:0 0 14px;max-width:260px}
+#load i{display:block;height:100%;width:30%;background:var(--teal);border-radius:3px;animation:slide 1.1s infinite ease-in-out}
+@keyframes slide{0%{margin-left:-30%}100%{margin-left:100%}}
+#fail{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:17px;line-height:1.5;z-index:40;background:var(--void)}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .25s;z-index:15}
+
+@media (max-width:640px){
+  html,body{font-size:14px}
+  #loc{padding:7px 11px 8px;max-width:calc(100% - 176px)}
+  #st-body{font-size:18px}#st-sub{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#st-prog{font-size:11.5px}
+  .tb{min-width:46px;height:46px;padding:2px;border-radius:13px}.tb span{display:none}#topbtns{gap:6px}
+  .act{height:50px;font-size:15.5px;padding:0 16px 0 13px}.act.primary{height:58px;font-size:18px;padding:0 22px 0 17px}.act kbd{display:none}.act.round{width:78px;height:78px}
+  #stick{width:124px;height:124px}
+  #mini{width:104px;height:104px;top:calc(var(--gt) + 54px)}
+  #guide{left:var(--gl);transform:none;top:calc(var(--gt) + 84px);max-width:calc(100% - 140px);font-size:13.5px;padding:6px 11px}
+  #toast{bottom:auto;top:calc(var(--gt) + 168px);font-size:14.5px;padding:9px 14px}
+  #card h3{font-size:21px}#card p{font-size:15.5px}
+  #menu{top:calc(var(--gt) + 54px)}
+  #start{background:rgba(14,10,6,.82)}#start .inner{padding:20px var(--gr) 20px var(--gl)}#start p{font-size:16px}#start li{font-size:15px}
+}
+@media (max-height:480px){
+  #loc{padding:6px 10px}#st-prog{display:none}
+  .tb{height:44px;min-width:46px}.tb span{display:none}
+  .act{height:46px;font-size:15px}.act.primary{height:52px;font-size:17px}.act kbd{display:none}.act.round{width:70px;height:70px}
+  #stick{width:112px;height:112px}
+  #mini{width:92px;height:92px;top:calc(var(--gt) + 50px)}
+  #guide{max-width:36%;font-size:13px;padding:5px 10px}
+  #toast{bottom:calc(var(--gb) + 4px);max-width:40%;font-size:13px;padding:7px 12px}
+  #card{max-height:calc(100% - 24px)}
+  #start h1{font-size:34px;margin:4px 0 8px}#start ol{gap:5px;margin-bottom:12px}#start p{margin-bottom:8px;font-size:15px}
+  #year{top:12%}
+}
+@media (prefers-reduced-motion:reduce){.act.primary,.mk::before{animation:none}#fade{transition:none}}
+</style>
+
+<div id="app">
+  <canvas id="gl" tabindex="0" aria-label="3D view of the ancient city of Mohenjo-daro"></canvas>
+  <div class="layer" id="markers"></div>
+  <div id="fade"></div>
+
+  <div class="layer" id="hud" hidden>
+    <div class="panel" id="loc">
+      <div id="st-prog"></div>
+      <div id="st-body">The plain</div>
+      <div id="st-sub">Mohenjo-daro · today (ruins)</div>
+    </div>
+    <div id="topbtns">
+      <button class="tb" id="b-places" type="button" aria-label="Places: jump to a part of the city"></button>
+      <button class="tb" id="b-notes" type="button" aria-label="Notebook: your discoveries"></button>
+      <button class="tb" id="b-more" type="button" aria-label="More options"></button>
+    </div>
+    <canvas id="mini" aria-label="Mini-map: tap to open the big map"></canvas>
+    <button class="panel" id="guide" type="button" hidden></button>
+    <div id="year" hidden><small>Time travel</small><div id="year-n"></div></div>
+    <div class="panel" id="card" hidden></div>
+    <div class="panel" id="toast" hidden></div>
+    <div class="panel" id="menu" hidden>
+      <button id="m-music" type="button"></button>
+      <button id="m-sound" type="button"></button>
+      <button id="m-full" type="button"></button>
+      <button id="m-help" type="button"></button>
+    </div>
+    <div id="stick"><span>Walk</span><i></i></div>
+    <div id="actions"></div>
+  </div>
+
+  <div class="overlay" id="places" hidden>
+    <div class="sheet">
+      <div class="phead"><div><div class="eyebrow">Jump to a place</div><h2>Places</h2></div><button class="btn" id="places-close" type="button">Close</button></div>
+      <div class="pbody"><p class="note" style="margin-bottom:8px">Tap a diamond on the map and glowing dots will show you the way. Or jump straight to a place below.</p><canvas id="bigmap"></canvas><div class="pgrid" id="places-body" style="margin-top:12px"></div></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="notes" hidden>
+    <div class="sheet">
+      <div class="phead"><div><div class="eyebrow">Explorer’s notebook</div><h2 id="notes-title">Notebook</h2></div><button class="btn" id="notes-close" type="button">Close</button></div>
+      <div class="pbody" id="notes-body"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="help" hidden>
+    <div class="sheet">
+      <div class="phead"><div><div class="eyebrow">How to play</div><h2>Controls</h2></div><button class="btn" id="help-close" type="button">Close</button></div>
+      <div class="pbody">
+        <p>Walk around the city. Yellow diamonds mark things to discover: walk up to one and press <b>Look closer</b>. Press <b>Time travel</b> to switch between the ruins of today and the living city of about 2500 BCE.</p>
+        <div class="keys">
+          <div><span>Walk</span><b>Arrow keys or W A S D · left stick</b></div><div><span>Look around</span><b>Drag the screen</b></div>
+          <div><span>Run</span><b>Shift · hold Run</b></div><div><span>Time travel</span><b>T</b></div>
+          <div><span>Look closer</span><b>E</b></div><div><span>Places</span><b>M</b></div>
+          <div><span>Notebook</span><b>B</b></div><div><span>Help</span><b>H</b></div>
+          <div><span>Show the way to the next discovery</span><b>G</b></div><div><span>Big map</span><b>Tap the mini-map</b></div>
+        </div>
+        <p class="note">The city is modelled on Mohenjo-daro, one of the largest cities of the Harappan (Indus Valley) civilisation. The Great Bath, great hall, pillared hall and long building follow the excavation plans. The other buildings and all the houses are typical examples, not copies of real ones. Distances are shortened and the mound is lower than the real one (about 12 m). Roofs, upper floors and the wooden hall are reconstructions: only the brick walls survive. There are no people in the city yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="start">
+    <div class="inner">
+      <div class="eyebrow">Mohenjo-daro · Harappan civilisation</div>
+      <h1>Harappa <span>Explorer</span></h1>
+      <p>Walk through the ruins of a 4,500-year-old city. Then travel back in time and see it alive.</p>
+      <ol>
+        <li id="s1"><span>Explore the ruins that archaeologists dug up.</span></li>
+        <li id="s2"><span>Tap <b>Time travel</b> to go back to about 2500 BCE.</span></li>
+        <li id="s3"><span>Find all the discoveries in both times.</span></li>
+      </ol>
+      <div id="load"><i></i></div>
+      <button class="btn primary big" id="start-btn" type="button" disabled>Loading…</button>
+      <small id="start-note"></small>
+    </div>
+  </div>
+
+  <div id="fail" hidden>This game needs WebGL, which is not available in this browser.<br>Try Chrome, Safari or Firefox.</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="models/models.js"></script>
+<script src="js/plan.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/game.js"></script>

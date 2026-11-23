@@ -1,0 +1,25 @@
+{
+ "device": "c8_density_lab",
+ "title": "Density Lab",
+ "built": "2026-11-23 17:52:15",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.761263f48a.js": {
+   "bytes": 531550,
+   "sha256": "761263f48a4b104a0be50544d3d38e6a06dca84bd6be971ddb8f7d4ab5a9f62d"
+  },
+  "index.html": {
+   "bytes": 7416,
+   "sha256": "fee06012b71249d863eada75581182ae5ba377e9874346f0bb41a55bfa8376ba"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}

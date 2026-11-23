@@ -1,0 +1,25 @@
+{
+ "device": "c7_indicator_bench",
+ "title": "Indicator Bench",
+ "built": "2026-11-23 17:52:11",
+ "copyright": "\u00a9 ZetaQ / LogiQ Learning. All rights reserved. Unauthorised copying or hosting prohibited.",
+ "domain_lock": [
+  "nilparadox.github.io",
+  "localhost",
+  "127.0.0.1"
+ ],
+ "files": {
+  "app.70693bb00e.js": {
+   "bytes": 478901,
+   "sha256": "70693bb00e1e57567ed6aea756a9e01f25c90a56e0492eef50c50f38ef3d6179"
+  },
+  "index.html": {
+   "bytes": 7420,
+   "sha256": "c21f51a28ab9bc1ff9b5176e6689c121cbc24f25c1d829be578e3251424dfc79"
+  },
+  "vendor.08fd7545d1.js": {
+   "bytes": 691747,
+   "sha256": "c55bd04449b1c61b01412829b54ddeb93d81051a511a6ed111155fd342a11d64"
+  }
+ }
+}
